@@ -23,7 +23,7 @@ void emit(char current_bit, char *buf, size_t *output_buffer_used) {
         flush(buf, output_buffer_used);
     }
 
-    buf[*output_buffer_used] = current_bit ? '1' : '0';
+    buf[*output_buffer_used] = current_bit;
     *output_buffer_used = *output_buffer_used + 1;
 }
 
@@ -49,7 +49,11 @@ void decode(int samples_per_symbol_est) {
 
             // Halfway into the bit, measure
             if (samples_since_pulse_start == (samples_per_symbol_est / 2)) {
-                emit(current_bit, obuf, &output_buffer_used);
+                emit(current_bit ? '1' : '0', obuf, &output_buffer_used);
+            }
+
+            if (samples_since_pulse_start == (samples_per_symbol_est * 2)) {
+                emit('\n', obuf, &output_buffer_used);
             }
 
             last_bit = current_bit;
