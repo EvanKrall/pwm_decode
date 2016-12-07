@@ -39,6 +39,8 @@ This example doesn't do any filtering/shifting of the signal, so it won't be rob
 # How `pwm_decode` works
 
 `pwm_decode` reads `unsigned char` from stdin, expecting them to be 0 or 1.
-You must pass the estimated length of each symbol (in samples) as an argument. This does not have to be exact.
-It looks for a rising edge (a 0 to 1 transition), and then halfway through the symbol emits '0' or '1', depending on whether the input is still high or low.
-When 2*samples_per_symbol_est samples pass without a rising edge, it emits a newline.
+You must pass the estimated length of each symbol (in samples) as an argument.
+This does not have to be exact, but should be within a factor of 2.
+At a rising edge (a 0 to 1 transition), it starts counting symbols.
+Halfway through the symbol (when the counter is `samples_per_symbol_est / 2`) emits the ASCII char '0' or '1', depending on whether the input is still high or low.
+When `samples_per_symbol_est * 2` symbols have passed without another rising edge, it emits a newline.
